@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Build docker image and add a descriptive tag
           command: |
-            docker build -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3} .
+            docker build -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
       - run:
           name: List docker images
           command: |
@@ -55,7 +55,7 @@ jobs:
           #verifiche quando faccio docker run? verifiche sul port fowarding?
           #aggiungere le variabili d'ambiente con password docker e aws cli
           command: |
-            docker run -p 5000:5000 udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3}
+            docker run -p 5000:5000 udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
             sudo netstat -tulpn | grep :5000
             docker ps
             curl http://localhost:5000 > connection_dump.txt
@@ -71,13 +71,31 @@ jobs:
       - run:
           name: run docker image and test it
           command: |
-            dockerpath=$DOCKERHUB_USERNAME/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3}
+            dockerpath=$DOCKERHUB_USERNAME/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
             echo "Docker ID and Image: $dockerpath"
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
-            docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3} $dockerpath
+            docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
   
-  create-vpc:
+  deploy-network-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      #installing tar - mandatory for creating workspaces in aws-cli image
+      - run:
+          name: Install dependencies 
+          command: yum install -y tar gzip
+      #install backend instance    
+      - run:
+          name: Create Backend infrastructure stack
+          working_directory: ./.circleci/files
+          command: |
+            aws cloudformation deploy \
+              --template-file network.yml \
+              --tags project=udacity-capstone-${CIRCLE_WORKFLOW_ID:0:5} \
+              --stack-name network-capstone-project \
+              --no-fail-on-empty-changeset
 
 #deploy to eks
 
@@ -97,5 +115,5 @@ workflows:
       - build-lint-code
       - docker-container:
           requires: [build-lint-code]
-#      - create-vpc:
+#      - deploy-network-infrastructure:
 #          requires: [docker-container]
