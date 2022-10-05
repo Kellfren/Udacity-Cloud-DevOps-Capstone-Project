@@ -1,26 +1,21 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
+# UDACITY CAPSTONE PROJECT - CircleCI File Configuration
+#In this project I applied the skills and knowledge developed throughout the Udacity Cloud DevOps Nanodegree program
+
 version: 2
+
 jobs:
-  build:
+  
+  #Build and lint code
+  build-lint-code:
     docker:
-    # Use the same Docker base as the project
       - image: python:3.9-buster
-
     working_directory: ~/app
-
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
       - run:
           name: install dependencies
           command: |
@@ -33,10 +28,74 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      # run lint!
       - run:
           name: run lint
           command: |
             . venv/bin/activate
             make lint 
+  
+  docker-container:
+    docker:
+      - image: docker:17.05.0-ce-git
+    working_directory: ~/app
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build docker image and add a descriptive tag
+          command: |
+            docker build -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3} .
+      - run:
+          name: List docker images
+          command: |
+            docker image ls
+      - run:
+          name: run docker image and test it
+          #capire se posso usare delle variabili per tag e nome dell'immagine
+          #verifiche quando faccio docker run? verifiche sul port fowarding?
+          #aggiungere le variabili d'ambiente con password docker e aws cli
+          command: |
+            docker run -p 5000:5000 udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3}
+            sudo netstat -tulpn | grep :5000
+            docker ps
+            curl http://localhost:5000 > connection_dump.txt
+            cat migration_dump.txt
+            if grep -q "<!DOCTYPE html>" connection_dump.txt
+            then
+              echo "connection establisehd"
+              exit 0
+            else
+              echo "connection refused"
+              exit 1
+            fi
+      - run:
+          name: run docker image and test it
+          command: |
+            dockerpath=$DOCKERHUB_USERNAME/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3}
+            echo "Docker ID and Image: $dockerpath"
+            docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
+            docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:3} $dockerpath
+            docker push $dockerpath
+  
+  create-vpc:
+
+#deploy to eks
+
+#image-check:
+#    executor: aws-cli/default
+#    steps:
+#      - checkout
+#      - aws-cli/setup
+#      - run:
+#          name: ecr image check
+#          command: |
+#            aws ecr describe-images --repository-name udacity-capstone-bcrypt
+
+workflows:
+  capstone:
+    jobs:
+      - build-lint-code
+      - docker-container:
+          requires: [build-lint-code]
+#      - create-vpc:
+#          requires: [docker-container]
