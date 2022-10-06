@@ -113,7 +113,7 @@ workflows:
  capstone:
     jobs:
 #      - build-lint-code
-      - docker-container:
-          requires: [build-lint-code]
+      - docker-container
+#          requires: [build-lint-code]
 #      - deploy-network-infrastructure:
 #          requires: [docker-container]
