@@ -87,6 +87,52 @@ jobs:
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
+
+
+  docker-container2:
+    docker:
+      - image: python:3.9-buster
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: install dependecies
+          command: |
+            sudo apt-get install net-tools
+            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      - run:
+          name: Build docker image and add a descriptive tag
+          command: |
+            docker build --build-arg build_number="${CIRCLE_BUILD_NUM}" -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
+      - run:
+          name: List docker images
+          command: |
+            docker image ls
+      - run:
+          name: run docker image and test it
+          command: |
+            docker run -d -p 5000:5000 --name capstone udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+            netstat -tulpn | grep :5000
+            docker ps
+            curl http://0.0.0.0:5000 > connection_dump.txt
+            cat migration_dump.txt
+            if grep -q "<!DOCTYPE html>" connection_dump.txt
+            then
+              echo "connection establisehd"
+              exit 0
+            else
+              echo "connection refused"
+              exit 1
+            fi
+      - run:
+          name: push docker
+          command: |
+            dockerpath=$DOCKERHUB_USERNAME/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+            echo "Docker ID and Image: $dockerpath"
+            docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
+            docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
+            docker push $dockerpath
+
   
   deploy-network-infrastructure:
     docker:
@@ -124,7 +170,7 @@ workflows:
  capstone:
     jobs:
 #      - build-lint-code
-      - docker-container
+      - docker-container2
 #          requires: [build-lint-code]
 #      - deploy-network-infrastructure:
 #          requires: [docker-container]
