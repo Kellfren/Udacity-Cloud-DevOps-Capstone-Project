@@ -142,7 +142,7 @@ jobs:
           name: Create cluster and worker nodes
           working_directory: ./.circleci/files
           command: |
-            eksctl create cluster -f eksctl-cluster.yaml
+            eksctl create cluster -f eksctl-cluster.yml
             kubectl get svc
       - run:
           name: Update kubectl config 
