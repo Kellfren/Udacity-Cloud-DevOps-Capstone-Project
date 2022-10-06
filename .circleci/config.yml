@@ -91,13 +91,14 @@ jobs:
 
   docker-container2:
     docker:
-      - image: python:3.9-buster
+      - image: cimg/base:2022.10
     working_directory: ~/app
     steps:
       - checkout
       - run:
           name: install dependecies
           command: |
+            apt-get install net-tools
             apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
       - run:
           name: Build docker image and add a descriptive tag
