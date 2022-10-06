@@ -5,6 +5,7 @@ version: 2.1
 
 orbs:
   kubernetes: circleci/kubernetes@1.3.1
+  aws-cli: circleci/aws-cli@3.1.3
 
 #parameters:
   #tipo il nome del cluster
@@ -102,11 +103,11 @@ jobs:
       - image: python:3.9-buster
     steps:
       - checkout
+      - aws-cli/install
       - run:
           name: Install of dependencies for cluster and workers setup - aws cli
           command: | 
-            apk add --update tar gzip curl 
-            pip install awscli
+            sudo apt-get install tar gzip curl 
             aws --version
       - run:
           name: check cluster 
@@ -124,13 +125,13 @@ jobs:
 workflows:
  capstone:
     jobs:
-      - build-lint-code
-      - docker-container:
-          requires: [build-lint-code]
-      - deploy-network-infrastructure:
-          requires: [docker-container]
-      - create-eks-cluster: 
-          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
+#      - build-lint-code
+#      - docker-container:
+#          requires: [build-lint-code]
+#      - deploy-network-infrastructure:
+#          requires: [docker-container]
+      - create-eks-cluster 
+#          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
 #      - deploy-to-eks:
 #          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
 #      - smoke-test:
