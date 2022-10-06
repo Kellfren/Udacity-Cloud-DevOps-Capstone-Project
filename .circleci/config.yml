@@ -107,5 +107,5 @@ workflows:
       - build-lint-code
       - docker-container:
           requires: [build-lint-code]
-#      - deploy-network-infrastructure:
-#          requires: [docker-container]
+      - deploy-network-infrastructure:
+          requires: [docker-container]
