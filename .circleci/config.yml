@@ -57,17 +57,17 @@ jobs:
           command: |
             docker run -d -p 5000:5000 udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
             netstat -tulpn | grep :5000
-            docker ps
-            curl http://localhost:5000 > connection_dump.txt
-            cat migration_dump.txt
-            if grep -q "<!DOCTYPE html>" connection_dump.txt
-            then
-              echo "connection establisehd"
-              exit 0
-            else
-              echo "connection refused"
-              exit 1
-            fi
+#            docker ps
+#            curl http://localhost:5000 > connection_dump.txt
+#            cat migration_dump.txt
+#            if grep -q "<!DOCTYPE html>" connection_dump.txt
+#            then
+#              echo "connection establisehd"
+#              exit 0
+#            else
+#              echo "connection refused"
+#              exit 1
+#            fi
       - run:
           name: push docker
           command: |
@@ -110,9 +110,9 @@ jobs:
 #            aws ecr describe-images --repository-name udacity-capstone-bcrypt
 
 workflows:
-  default:
+ capstone:
     jobs:
-      - build-lint-code
+#      - build-lint-code
       - docker-container:
           requires: [build-lint-code]
 #      - deploy-network-infrastructure:
