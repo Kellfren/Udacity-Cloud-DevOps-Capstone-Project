@@ -99,7 +99,7 @@ jobs:
           name: install dependecies
           command: |
             sudo apt-get install net-tools
-            sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+            sudo apt-get install docker-ce docker-ce-cli containerd.io
       - run:
           name: Build docker image and add a descriptive tag
           command: |
