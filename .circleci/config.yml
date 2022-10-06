@@ -142,7 +142,7 @@ jobs:
           name: Create cluster and worker nodes
           working_directory: ./.circleci/files
           command: |
-            eksctl create cluster -f ekctl-cluster.yaml
+            eksctl create cluster -f ekstl-cluster.yaml
             kubectl get svc
       - run:
           name: Update kubectl config 
@@ -152,7 +152,7 @@ jobs:
           name: Update kubectl config 
           command: |
             aws eks describe-cluster --name udacity-capstone-cluster
-            
+
 workflows:
  capstone:
     jobs:
