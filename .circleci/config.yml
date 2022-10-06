@@ -41,10 +41,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: install dependecies
-          command: |
-            apt install net-tools 
+#      - run:
+#          name: install dependecies
+#          command: |
+#            apt install net-tools 
       - run:
           name: Build docker image and add a descriptive tag
           command: |
@@ -60,9 +60,8 @@ jobs:
           #aggiungere le variabili d'ambiente con password docker e aws cli
           command: |
             docker run -d -p 5000:5000 udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-            netstat -tulpn | grep :5000
             docker ps
-#            curl http://localhost:5000 > connection_dump.txt
+            curl http://localhost:5000 > connection_dump.txt
 #            cat migration_dump.txt
 #            if grep -q "<!DOCTYPE html>" connection_dump.txt
 #            then
