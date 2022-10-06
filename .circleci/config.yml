@@ -91,7 +91,7 @@ jobs:
 
   docker-container2:
     docker:
-      - image: ubuntu-2204:2022.04.2
+      - image: cimg/base:2022.10
     working_directory: ~/app
     steps:
       - checkout
