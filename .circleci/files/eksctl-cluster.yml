@@ -1,29 +1,29 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: EKS-bcrypt-cluster
+  name: udacity-capstone-cluster
   region: us-east-1
 
 vpc:
-  id: vpc-04fd177fb778820de
-  cidr: "192.168.0.0/16"
+  id: vpc-0549a9afaf6429c23
+  cidr: "10.100.0.0/16"
   subnets:
     public:
       us-east-1a:
-        id: subnet-0d1ac1232cf8e99b0
+        id: subnet-0dc8fdfd2381a33ae
       us-east-1b:
-        id: subnet-0462409ee9c771837
+        id: subnet-01b3f00ee188330a6
     private:
       us-east-1a:
-        id: subnet-0c8442559985248c2
+        id: subnet-0f80d82bbdd080e31
       us-east-1b:
-        id: subnet-03e6153f027e7e904
+        id: subnet-0512c92299b3df811
 
 nodeGroups:
-  - name: EKS-public-workers
+  - name: eks-public-workers
     instanceType: t2.medium
     desiredCapacity: 2
-  - name: EKS-private-workers
+  - name: eks-private-workers
     instanceType: t2.medium
     desiredCapacity: 1
     privateNetworking: true
