@@ -5,30 +5,37 @@ Parameters:
 
     EnvironmentName:
         Description: current environment name
+        Default: Udacity-Capstone-Project
         Type: String
     
     StudentName:
         Description: the student name who created the stack
+        Default: Francesco Calzona
         Type: String
 
     VpcCIDR: 
         Description: IP range (CIDR notation) for this VPC
+        Default: 10.100.0.0/16 
         Type: String
     
     PublicSubnet1CIDR:
         Description: the IP range (CIDR notation) for the public subnet in the first Availability Zone
+        Default: 10.100.1.0/24
         Type: String
 
     PublicSubnet2CIDR:
         Description: the IP range (CIDR notation) for the public subnet in the second Availability Zone
+        Default: 10.100.2.0/24
         Type: String
 
     PrivateSubnet1CIDR:
         Description: the IP range (CIDR notation) for the private subnet in the first Availability Zone
+        Default: 10.100.3.0/24
         Type: String
 
     PrivateSubnet2CIDR:
         Description: the IP range (CIDR notation) for the private subnet in the second Availability Zone
+        Default: 10.100.4.0/24
         Type: String
 
 Resources:
