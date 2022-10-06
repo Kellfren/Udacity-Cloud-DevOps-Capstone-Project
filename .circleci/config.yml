@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Build docker image and add a descriptive tag
           command: |
-            docker build -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
+            docker build --build-arg build_number="${CIRCLE_BUILD_NUM}" -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
       - run:
           name: List docker images
           command: |
