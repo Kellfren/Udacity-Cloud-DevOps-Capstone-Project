@@ -169,29 +169,29 @@ jobs:
             kubectl-version: v1.25.2
       - aws-eks/update-kubeconfig-with-authenticator:
             cluster-name: udacity-capstone-cluster
-#      - run:
-#          name: test
-#          command: |
-#            kubectl get services
-#            ls
-#      - kubernetes/create-or-update-resource:
-#          working_directory: ./.circleci/files
-#          get-rollout-status: true
-#          resource-file-path: deployment.yml
-#          resource-name: frenkell/udacity-capstone
-#          show-kubectl-command: true
-#      - run:
-#          name: store app endpoint and old
-#          working_directory: ./.circleci/files
-#          command: |
-#            kubectl get services
-#            api=$(kubectl get services udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-#            echo $api >> capstone-endpoint.txt
-#            cat app-endpoint.txt
-#      - persist_to_workspace:
-#          root: ~/
-#          paths:
-#            - .circleci/files/capstone-endpoint.txt
+      - run:
+          name: test
+          command: |
+            kubectl get services
+            ls
+      - kubernetes/create-or-update-resource:
+          working_directory: ./.circleci/files
+          get-rollout-status: true
+          resource-file-path: deployment.yml
+          resource-name: frenkell/udacity-capstone
+          show-kubectl-command: true
+      - run:
+          name: store app endpoint and old
+          working_directory: ./.circleci/files
+          command: |
+            kubectl get services
+            api=$(kubectl get services udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+            echo $api >> capstone-endpoint.txt
+            cat app-endpoint.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - .circleci/files/capstone-endpoint.txt
 
 workflows:
  capstone:
