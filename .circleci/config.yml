@@ -175,9 +175,8 @@ jobs:
             kubectl get services
             ls
       - kubernetes/create-or-update-resource:
-          working_directory: ./.circleci/files
           get-rollout-status: true
-          resource-file-path: deployment.yml
+          resource-file-path: .circleci/files/deployment.yml
           resource-name: frenkell/udacity-capstone
           show-kubectl-command: true
       - run:
