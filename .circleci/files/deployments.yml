@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: udacity-capstone
-        image: frenkell/udacity:capstone
+        image: frenkell/udacity-capstone
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
