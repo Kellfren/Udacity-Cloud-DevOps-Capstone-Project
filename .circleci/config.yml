@@ -192,15 +192,13 @@ jobs:
           paths:
             - .circleci/files/capstone-endpoint.txt
 
-  
-
 workflows:
  capstone:
     jobs:
       - build-lint-code
       - docker-container:
           requires: [build-lint-code]
-     - deploy-network-infrastructure:
+      - deploy-network-infrastructure:
           requires: [docker-container]
       - create-eks-cluster: 
           requires: [build-lint-code, docker-container, deploy-network-infrastructure]
