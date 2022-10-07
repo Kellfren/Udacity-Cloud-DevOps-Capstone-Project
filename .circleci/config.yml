@@ -176,7 +176,7 @@ jobs:
             ls
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
-          resource-file-path: files/deployment.yml
+          resource-file-path: ./.circleci/files/deployment.yml
           resource-name: frenkell/udacity-capstone
           show-kubectl-command: true
       - run:
