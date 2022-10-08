@@ -11,6 +11,18 @@ orbs:
 #parameters:
   #tipo il nome del cluster
 
+commands:
+eks-cluster-destroy:
+    description: Destroy EKS infrastructure in case of deployment failure
+    steps:
+      - run:
+          name: Destry EKS infra
+          when: on_fail
+          command: | 
+            echo "Destroying eks cluster after deployment failure"
+            eksctl delete cluster --region=us-east-1 --name=udacity-capstone-cluster
+            echo ""EKS cluster and nodes successfully destroyed. For error see build-stage output""
+
 jobs:
   
   #Build and lint code
@@ -159,6 +171,21 @@ jobs:
           name: Update kubectl config 
           command: |
             aws eks describe-cluster --name udacity-capstone-cluster
+      
+      #parte di deploy manuale senza orbs
+      - run:
+          name: Apply kubectl deploy manifest
+          working_directory: ./.circleci/files
+          command: |
+            kubectl apply -f deployment.yml
+            kubectl get deployments
+      - run:
+          name: Check kubernetes configuration
+          command: |
+            kubectl get pods -o wide
+            kubectl get nodes -o wide
+#      - eks-infra-destroy
+
 
 #  deploy-to-eks:
 #    docker:
