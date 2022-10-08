@@ -12,16 +12,16 @@ orbs:
   #tipo il nome del cluster
 
 commands:
-eks-cluster-destroy:
-    description: Destroy EKS cluster in case of deployment failure
-    steps:
-      - run:
-          name: Destry EKS cluster
-          when: on_fail
-          command: | 
-            echo "Destroying eks cluster after deployment failure"
-            eksctl delete cluster --region=us-east-1 --name=udacity-capstone-cluster
-            echo ""EKS cluster and nodes successfully destroyed. For error see build-stage output""
+  eks-cluster-destroy:
+      description: Destroy EKS cluster in case of deployment failure
+      steps:
+        - run:
+            name: Destry EKS cluster
+            when: on_fail
+            command: | 
+              echo "Destroying eks cluster after deployment failure"
+              eksctl delete cluster --region=us-east-1 --name=udacity-capstone-cluster
+              echo ""EKS cluster and nodes successfully destroyed. For error see build-stage output""
 
 jobs:
   
