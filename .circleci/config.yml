@@ -109,6 +109,7 @@ jobs:
               --tags project=udacity-capstone-${CIRCLE_WORKFLOW_ID:0:5} \
               --stack-name network-capstone-project \
               --no-fail-on-empty-changeset
+      #--> provare a estrarre i nomi delle varie subnet e vpc e inserirli come variabili nel file eksctl-cluster.yml          
   
   #se esiste già il cluster? si può saltare questo step?
   create-eks-cluster: 
@@ -130,6 +131,13 @@ jobs:
             else
               echo "the cluster doesn't exits"
             fi
+      
+      #install envsubst
+      - run:
+          name: Install dependencies
+          command: |
+            pip install envsubst  
+      
       - run:
           name: Install iam authenticator
           command: |
@@ -182,6 +190,10 @@ jobs:
             mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
             echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
             kubectl version --short --client
+            
+            export DOCKER_IMAGE=udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+            envsubst < deployment.yml
+            
             kubectl apply -f deployment.yml
             kubectl get deployments
       - run:
