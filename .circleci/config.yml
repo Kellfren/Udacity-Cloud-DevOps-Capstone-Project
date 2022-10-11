@@ -279,7 +279,7 @@ jobs:
           working_directory: ./.circleci/files
           command: |
             export CAPSTONE_IP=$(cat capstone-endpoint.txt)    
-            export CAPSTONE_ENDPOINT="http://${APP_IP}:5000"
+            export CAPSTONE_ENDPOINT="http://${CAPSTONE_IP}:5000"
             echo "Endpoint = ${CAPSTONE_ENDPOINT}"
             if curl --head ${CAPSTONE_ENDPOINT} | grep "HTTP/1.1 200 OK"
             then
