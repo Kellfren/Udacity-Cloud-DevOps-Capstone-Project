@@ -291,18 +291,18 @@ jobs:
       - aws-eks/update-kubeconfig-with-authenticator:
             cluster-name: udacity-capstone-cluster
       - run:
-          name: test
+          name: check kubernetes active services
           command: |
             kubectl get services
             ls
       - run:
-          name: store app endpoint and old
+          name: store udacity-capstone endpoint
           working_directory: ./.circleci/files
           command: |
             kubectl get services
             api=$(kubectl get services udacity-capstone --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
             echo $api >> capstone-endpoint.txt
-            cat app-endpoint.txt
+            cat capstone-endpoint.txt
       - persist_to_workspace:
           root: ~/
           paths:
