@@ -124,9 +124,9 @@ jobs:
             export PRIVATE_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet2'].OutputValue" --output text)             
             echo "VPC = ${VPC}""
             echo "Public-Subnet-1 = ${PUBLIC_SUBNET_1}"
-            echo "Public-Subnet-2 =${PUBLIC_SUBNET_2}"
-            echo "Private-Subnet-1 =${PRIVATE_SUBNET_1}"
-            echo "Private-Subnet-2 =${PRIVATE_SUBNET_2}"
+            echo "Public-Subnet-2 = ${PUBLIC_SUBNET_2}"
+            echo "Private-Subnet-1 = ${PRIVATE_SUBNET_1}"
+            echo "Private-Subnet-2 = ${PRIVATE_SUBNET_2}"
   
   #se esiste già il cluster? si può saltare questo step?
   create-eks-cluster: 
@@ -200,9 +200,9 @@ jobs:
 #            export PRIVATE_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet2'].OutputValue" --output text)             
 #            echo "VPC = ${VPC}""
 #            echo "Public-Subnet-1 = ${PUBLIC_SUBNET_1}"
-#            echo "Public-Subnet-2 =${PUBLIC_SUBNET_2}"
-#            echo "Private-Subnet-1 =${PRIVATE_SUBNET_1}"
-#            echo "Private-Subnet-2 =${PRIVATE_SUBNET_2}"
+#            echo "Public-Subnet-2 = ${PUBLIC_SUBNET_2}"
+#            echo "Private-Subnet-1 = ${PRIVATE_SUBNET_1}"
+#            echo "Private-Subnet-2 = ${PRIVATE_SUBNET_2}"
 #            envsubst < eksctl-cluster.yml | eksctl create cluster -f      
       
       - run:
