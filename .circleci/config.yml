@@ -311,7 +311,7 @@ jobs:
           name: Smoke test
           working_directory: ./.circleci/files
           command: |
-            export APP_IP=$(cat app-endpoint.txt)    
+            export APP_IP=$(cat capstone-endpoint.txt)    
             export APP_ENDPOINT="http://${APP_IP}:5000"
             echo ${APP_ENDPOINT} 
             sleep 1m
