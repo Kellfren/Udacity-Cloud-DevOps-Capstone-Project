@@ -308,19 +308,19 @@ jobs:
           paths:
             - .circleci/files/capstone-endpoint.txt
       - run:
-        name: Smoke test
-        working_directory: ./.circleci/files
-        command: |
-          export APP_IP=$(cat app-endpoint.txt)    
-          export APP_ENDPOINT="http://${APP_IP}:5000"
-          echo ${APP_ENDPOINT} 
-          sleep 1m
-          if curl ${APP_ENDPOINT} | grep "MOVIE RECOMMENDATION SYSTEM"
-          then
-            return 0
-          else
-            return 1
-          fi
+          name: Smoke test
+          working_directory: ./.circleci/files
+          command: |
+            export APP_IP=$(cat app-endpoint.txt)    
+            export APP_ENDPOINT="http://${APP_IP}:5000"
+            echo ${APP_ENDPOINT} 
+            sleep 1m
+            if curl ${APP_ENDPOINT} | grep "MOVIE RECOMMENDATION SYSTEM"
+            then
+              return 0
+            else
+              return 1
+            fi
 
 workflows:
  capstone:
