@@ -313,9 +313,8 @@ jobs:
           command: |
             export APP_IP=$(cat capstone-endpoint.txt)    
             export APP_ENDPOINT="http://${APP_IP}:5000"
-            echo ${APP_ENDPOINT} 
-            sleep 1m
-            if curl ${APP_ENDPOINT} | grep "MOVIE RECOMMENDATION SYSTEM"
+            echo ${APP_ENDPOINT}
+            if curl --head ${APP_ENDPOINT} | grep "HTTP/1.1 200 OK"
             then
               return 0
             else
