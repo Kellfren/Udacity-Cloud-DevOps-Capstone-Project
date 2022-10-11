@@ -288,7 +288,8 @@ workflows:
           requires: [build-lint-code, docker-container, deploy-network-infrastructure]
           filters:
             branches:
-              only: [main]
+              only:
+               - main
 #      - deploy-to-eks:
 #          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
 #      - smoke-test:
