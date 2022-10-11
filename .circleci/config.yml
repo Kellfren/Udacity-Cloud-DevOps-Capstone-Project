@@ -283,11 +283,11 @@ jobs:
             echo "Endpoint = ${CAPSTONE_ENDPOINT}"
             if curl --head ${CAPSTONE_ENDPOINT} | grep "HTTP/1.1 200 OK"
             then
-              exit 0
               echo "smoke test performed successfully"
+              exit 0  
             else
-              exit 1
               echo "smoke test failed"
+              exit 1
             fi
 
 workflows:
