@@ -10,9 +10,9 @@ vpc:
   subnets:
     public:
       us-east-1a:
-        id: $PUBLIC_SUBNET_2
-      us-east-1b:
         id: $PUBLIC_SUBNET_1
+      us-east-1b:
+        id: $PUBLIC_SUBNET_2
     private:
       us-east-1a:
         id: $PRIVATE_SUBNET_1
