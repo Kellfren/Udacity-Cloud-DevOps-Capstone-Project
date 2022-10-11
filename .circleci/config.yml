@@ -183,15 +183,15 @@ jobs:
           command: |
 
             export VPC=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='VPC'].OutputValue" --output text)
-            export PUBLIC_SUBNET_1=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet1'].OutputValue" --output text)
-            export PUBLIC_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet2'].OutputValue" --output text)
-            export PRIVATE_SUBNET_1=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet1'].OutputValue" --output text)
-            export PRIVATE_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet2'].OutputValue" --output text)             
+            export PUBLIC_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet1'].OutputValue" --output text)
+            export PUBLIC_SUBNET_1=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet2'].OutputValue" --output text)
+            export PRIVATE_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet1'].OutputValue" --output text)
+            export PRIVATE_SUBNET_1=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PrivateSubnet2'].OutputValue" --output text)             
             echo "VPC = ${VPC}"
-            echo "Public-Subnet-1 = ${PUBLIC_SUBNET_1}"
-            echo "Public-Subnet-2 = ${PUBLIC_SUBNET_2}"
-            echo "Private-Subnet-1 = ${PRIVATE_SUBNET_1}"
-            echo "Private-Subnet-2 = ${PRIVATE_SUBNET_2}"
+            echo "Public-Subnet-2 = ${PUBLIC_SUBNET_1}"
+            echo "Public-Subnet-1 = ${PUBLIC_SUBNET_2}"
+            echo "Private-Subnet-2 = ${PRIVATE_SUBNET_1}"
+            echo "Private-Subnet-1 = ${PRIVATE_SUBNET_2}"
           
             curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.20.4/2021-04-12/bin/linux/amd64/kubectl
             chmod +x ./kubectl
@@ -295,10 +295,19 @@ workflows:
  capstone:
     jobs:
       - build-lint-code
+          filters:
+            branches:
+              only: [main]
       - docker-container:
           requires: [build-lint-code]
+          filters:
+            branches:
+              only: [main]
       - deploy-network-infrastructure:
           requires: [docker-container]
+          filters:
+            branches:
+              only: [main]
       - create-eks-cluster: 
           requires: [build-lint-code, docker-container, deploy-network-infrastructure]
           filters:
