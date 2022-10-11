@@ -351,6 +351,6 @@ workflows:
               only: [main]
       - smoke-test:
           requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster, deploy-to-eks]
-          ilters:
+          filters:
             branches:
               only: [main]
