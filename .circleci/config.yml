@@ -186,12 +186,13 @@ jobs:
             mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
             echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
             kubectl version --short --client
+            eksctl create cluster -f eksctl-cluster.yml
+            kubectl get svc
 
 # Da capire se va messo qui o quando creo l'infrastruttura. Sarebbe da creare un file nuovo. Nel tutorial fa così:
 # replace environment variables and write to new file
 # envsubst < config.txt > confidential_config.txt
 # Se non funziona con il file deployment.yml, usare questo metodo anche lì
-
 #            export VPC=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='VPC'].OutputValue" --output text)
 #            export PUBLIC_SUBNET_1=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet1'].OutputValue" --output text)
 #            export PUBLIC_SUBNET_2=$(aws cloudformation describe-stacks --stack-name network-capstone-project --query "Stacks[0].Outputs[?OutputKey=='PublicSubnet2'].OutputValue" --output text)
@@ -202,10 +203,8 @@ jobs:
 #            echo "Public-Subnet-2 =${PUBLIC_SUBNET_2}"
 #            echo "Private-Subnet-1 =${PRIVATE_SUBNET_1}"
 #            echo "Private-Subnet-2 =${PRIVATE_SUBNET_2}"
-#            envsubst < eksctl-cluster.yml | eksctl create cluster -f
-
-            eksctl create cluster -f eksctl-cluster.yml
-            kubectl get svc
+#            envsubst < eksctl-cluster.yml | eksctl create cluster -f      
+      
       - run:
           name: Update kubectl config 
           command: |
