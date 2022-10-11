@@ -294,7 +294,7 @@ jobs:
 workflows:
  capstone:
     jobs:
-      - build-lint-code
+      - build-lint-code:
           filters:
             branches:
               only: [main]
