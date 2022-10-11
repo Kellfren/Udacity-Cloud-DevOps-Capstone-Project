@@ -226,7 +226,7 @@ jobs:
             kubectl version --short --client
             
             export DOCKER_IMAGE=udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-            envsubst < deployment.yml | kubectl apply -f
+            envsubst < deployment.yml | kubectl apply -f -
 
             kubectl get deployments
       - run:
