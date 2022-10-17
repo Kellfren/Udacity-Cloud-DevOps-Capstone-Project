@@ -340,11 +340,11 @@ workflows:
           filters:
             branches:
               only: [main]   
-      - local_image_scan: 
-          requires: [build-lint-code, docker-container]
-          filters:
-            branches:
-              only: [main]         
+#      - local_image_scan: 
+#          requires: [build-lint-code, docker-container]
+#          filters:
+#            branches:
+#              only: [main]         
 #      - deploy-network-infrastructure:
 #          requires: [build-lint-code, docker-container]
 #          filters:
