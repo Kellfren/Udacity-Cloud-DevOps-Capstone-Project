@@ -113,8 +113,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pyenv install 3.9.0
-            pyenv global 3.9.0
+            curl https://pyenv.run | bash
       - run:
           name: Load Docker image layer cache
           command: |
