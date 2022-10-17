@@ -7,6 +7,7 @@ orbs:
   kubernetes: circleci/kubernetes@1.3.1
   aws-cli: circleci/aws-cli@3.1.3
   aws-eks: circleci/aws-eks@2.2.0
+  anchore: anchore/anchore-engine@1.1.0
 
 #parameters:
 #  cluster-name:
@@ -59,6 +60,7 @@ jobs:
   docker-container:
     docker:
       - image: docker:17.05.0-ce-git
+    executor: anchore/anchore_engine  
     working_directory: ~/app
     steps:
       - checkout
@@ -72,14 +74,14 @@ jobs:
             apk --no-cache add curl
             apk add --upgrade net-tools-doc
             apk add --no-cache py-pip=9.0.0-r1
-      - run:
-          name: install trivy
-          command: |
-            apt-get install wget apt-transport-https gnupg lsb-release
-            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | tee /usr/share/keyrings/trivy.gpg > /dev/null
-            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/trivy.list
-            apt-get update
-            apt-get install trivy
+#      - run:
+#          name: install trivy
+#          command: |
+#            apt-get install wget apt-transport-https gnupg lsb-release
+#            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | tee /usr/share/keyrings/trivy.gpg > /dev/null
+#            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/trivy.list
+#            apt-get update
+#            apt-get install trivy
       - run:
           name: Build docker image and add a descriptive tag
           command: |
@@ -88,10 +90,10 @@ jobs:
           name: List docker images
           command: |
             docker image ls
-      - run:
-          name: scan docker vulnerabilities and exposures
-          command: |
-            trivy --severity HIGH udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+#      - run:
+#          name: scan docker vulnerabilities and exposures
+#          command: |
+#            trivy --severity HIGH udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
       - run:
           name: run docker image and push to docker hub
           command: |
@@ -102,7 +104,9 @@ jobs:
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
-
+      - anchore/analyze_local_image:
+          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+      
   deploy-network-infrastructure:
     docker:
       - image: amazon/aws-cli
