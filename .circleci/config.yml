@@ -111,6 +111,11 @@ jobs:
       - attach_workspace:
           at: /home/circleci/workspace/
       - run:
+          name: install dependencies
+          command: |
+            pyenv install 3.9.0
+            pyenv global 3.9.0
+      - run:
           name: Load Docker image layer cache
           command: |
             docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
