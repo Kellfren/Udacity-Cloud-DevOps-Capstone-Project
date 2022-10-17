@@ -91,35 +91,48 @@ jobs:
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
-      - run:
-          name: Save Docker image
-          command: |
-            rm -rf /home/circleci/workspace/docker/
-            mkdir /home/circleci/workspace/docker/ -p
-            docker save -o /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-      - persist_to_workspace:
-          root: /home/circleci/workspace/
-          paths:
-            - docker/*
+#      - run:
+#          name: Save Docker image
+#          command: |
+#            rm -rf /home/circleci/workspace/docker/
+#            mkdir /home/circleci/workspace/docker/ -p
+#            docker save -o /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+#      - persist_to_workspace:
+#          root: /home/circleci/workspace/
+#          paths:
+#            - docker/*
 
   local_image_scan:
     docker:
       - image: circleci/python:3.9-buster
     steps:
       - checkout
-      - setup_remote_docker
-      - attach_workspace:
-          at: /home/circleci/workspace/
+#      - setup_remote_docker
+#      - attach_workspace:
+#          at: /home/circleci/workspace/
 #      - run:
 #          name: install dependencies
 #          command: |
 #            curl https://pyenv.run | bash 
+#      - run:
+#          name: Load Docker image layer cache
+#          command: |
+#            docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
       - run:
-          name: Load Docker image layer cache
+          name: build container
           command: |
-            docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
+            docker build --build-arg build_number="${CIRCLE_BUILD_NUM}" -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
       - anchore/analyze_local_image:
+          dockerfile_path: ./Dockerfile
           image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+          policy_bundle_file_path: .circleci/.anchore/policy_bundle.json
+          policy_failure: true
+          timeout: '500'
+      - anchore/parse_reports
+      - store_artifacts:
+          path: anchore-reports
+#      - anchore/analyze_local_image:
+#          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
       
   deploy-network-infrastructure:
     docker:
