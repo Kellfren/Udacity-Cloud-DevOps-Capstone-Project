@@ -104,7 +104,7 @@ jobs:
 
   local_image_scan:
     docker:
-      - image: python:3.9-buster
+      - image: circleci/python:3.9-0-buster
     steps:
       - checkout
       - setup_remote_docker
@@ -114,18 +114,6 @@ jobs:
           name: install dependencies
           command: |
             curl https://pyenv.run | bash 
-            apt-get install \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
-            mkdir -p /etc/apt/keyrings
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-            echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-            apt-get update
-            apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
       - run:
           name: Load Docker image layer cache
           command: |
