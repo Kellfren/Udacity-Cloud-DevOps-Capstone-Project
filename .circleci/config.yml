@@ -104,7 +104,7 @@ jobs:
 
   local_image_scan:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: python:3.9-buster
     steps:
       - checkout
       - setup_remote_docker
