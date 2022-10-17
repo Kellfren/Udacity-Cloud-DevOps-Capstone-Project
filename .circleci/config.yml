@@ -104,7 +104,7 @@ jobs:
 
   local_image_scan:
     docker:
-      - image: circleci/python:3.9-0-buster
+      - image: circleci/python:3.9-buster
     steps:
       - checkout
       - setup_remote_docker
