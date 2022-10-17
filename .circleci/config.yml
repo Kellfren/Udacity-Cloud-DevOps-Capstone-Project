@@ -9,10 +9,10 @@ orbs:
   aws-eks: circleci/aws-eks@2.2.0
   anchore-engine: anchore/anchore-engine@1.9.0
 
-parameters:
-  cluster-name:
-      type: string
-      default: "udacity-capstone-cluster"
+#parameters:
+#  cluster-name:
+#      type: string
+#      default: "udacity-capstone-cluster"
 
 commands:
   eks-cluster-destroy:
@@ -92,14 +92,10 @@ jobs:
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
 
-#  scan_image:
-#    jobs:
-#      - anchore/image_scan:
-#          image_name: 'docker.io/anchore/anchore-engine:latest'
-#          policy_bundle_file_path: .circleci/.anchore/policy_bundle.json
-#          timeout: '300'          
+      - anchore/image_scan:
+          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+          timeout: '300'
 
-  # sbagliata la vpc CIDR? di base eksctl usa 192.168.0.0/16
   deploy-network-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -312,16 +308,9 @@ workflows:
           requires: [build-lint-code]
           filters:
             branches:
-              only: [main]
-      - anchore/image_scan:
-          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-          timeout: '300'
-          requires: [build-lint-code]
-          filters:
-            branches:
-              only: [main]        
+              only: [main]   
       - deploy-network-infrastructure:
-          requires: [docker-container]
+          requires: [build-lint-code, docker-container]
           filters:
             branches:
               only: [main]
