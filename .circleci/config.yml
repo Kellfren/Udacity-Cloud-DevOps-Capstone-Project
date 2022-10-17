@@ -27,29 +27,7 @@ commands:
               echo ""EKS cluster and nodes successfully destroyed"
 
 jobs:
-  
-  parameters-test:
-    docker:
-      - image: python:3.9-buster
-    steps:
-      - checkout
-      - aws-cli/install
-      - run: echo << pipeline.parameters.cluster-name >>
-      - run:
-          name: check if cluster exist 
-          command: | 
-            aws eks list-clusters --region us-east-1 --output text > cluster.txt
-            cat cluster.txt
-            if grep -q << pipeline.parameters.cluster-name >> cluster.txt
-            then
-              echo "the cluster already exist"
-              circleci-agent step halt
-              exit 0
-            else
-              echo "the cluster doesn't exits"
-            fi
-      
-  
+
   #Build and lint code
   build-lint-code:
     docker:
@@ -326,40 +304,39 @@ jobs:
 workflows:
  capstone:
     jobs:
-      - parameters-test
-#      - build-lint-code:
-#          filters:
-#            branches:
-#              only: [main]
-#      - docker-container:
-#          requires: [build-lint-code]
-#          filters:
-#            branches:
-#              only: [main]
-#      - anchore/image_scan:
-#          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-#          timeout: '300'
-#          requires: [build-lint-code]
-#          filters:
-#            branches:
-#              only: [main]        
-#      - deploy-network-infrastructure:
-#          requires: [docker-container]
-#          filters:
-#            branches:
-#              only: [main]
-#      - create-eks-cluster: 
-#          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
-#          filters:
-#            branches:
-#              only: [main]
-#      - deploy-to-eks:
-#          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
-#          filters:
-#            branches:
-#              only: [main]
-#      - smoke-test:
-#          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster, deploy-to-eks]
-#          filters:
-#            branches:
-#              only: [main]
+      - build-lint-code:
+          filters:
+            branches:
+              only: [main]
+      - docker-container:
+          requires: [build-lint-code]
+          filters:
+            branches:
+              only: [main]
+      - anchore/image_scan:
+          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+          timeout: '300'
+          requires: [build-lint-code]
+          filters:
+            branches:
+              only: [main]        
+      - deploy-network-infrastructure:
+          requires: [docker-container]
+          filters:
+            branches:
+              only: [main]
+      - create-eks-cluster: 
+          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
+          filters:
+            branches:
+              only: [main]
+      - deploy-to-eks:
+          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
+          filters:
+            branches:
+              only: [main]
+      - smoke-test:
+          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster, deploy-to-eks]
+          filters:
+            branches:
+              only: [main]
