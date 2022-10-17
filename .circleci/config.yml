@@ -107,7 +107,7 @@ jobs:
       - image: circleci/python:3.9-buster
     steps:
       - checkout
-#      - setup_remote_docker
+      - setup_remote_docker
 #      - attach_workspace:
 #          at: /home/circleci/workspace/
 #      - run:
@@ -126,7 +126,7 @@ jobs:
           dockerfile_path: ./Dockerfile
           image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
           policy_bundle_file_path: .circleci/.anchore/policy_bundle.json
-          policy_failure: true
+          policy_failure: false
           timeout: '500'
       - anchore/parse_reports
       - store_artifacts:
