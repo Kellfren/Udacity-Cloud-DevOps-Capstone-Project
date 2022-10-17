@@ -72,6 +72,9 @@ jobs:
             apk --no-cache add curl
             apk add --upgrade net-tools-doc
             apk add --no-cache py-pip=9.0.0-r1
+            
+            wget https://github.com/aquasecurity/trivy/releases/download/v0.32.1/trivy_0.32.1_Linux-64bit.deb
+            sudo dpkg -i trivy_0.32.1_Linux-64bit.deb
       - run:
           name: Build docker image and add a descriptive tag
           command: |
@@ -80,6 +83,10 @@ jobs:
           name: List docker images
           command: |
             docker image ls
+      - run:
+          name: scan docker vulnerabilities and exposures
+          command: |
+            trivy --severity HIGH udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
       - run:
           name: run docker image and push to docker hub
           command: |
@@ -90,11 +97,7 @@ jobs:
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
-      - run:
-          name: scan docker vulnerabilities and exposures
-          command: |
-            docker scan frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-      
+
   deploy-network-infrastructure:
     docker:
       - image: amazon/aws-cli
