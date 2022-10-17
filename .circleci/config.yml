@@ -33,6 +33,7 @@ jobs:
       - image: python:3.9-buster
     steps:
       - checkout
+      - aws-cli/install
       - run: echo << pipeline.parameters.cluster-name >>
       - run:
           name: check if cluster exist 
