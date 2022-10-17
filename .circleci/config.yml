@@ -92,9 +92,9 @@ jobs:
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
 
-      - anchore/image_scan:
-          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-          timeout: '300'
+#      - anchore/image_scan:
+#          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+#          timeout: '300'
 
   deploy-network-infrastructure:
     docker:
@@ -309,23 +309,23 @@ workflows:
           filters:
             branches:
               only: [main]   
-      - deploy-network-infrastructure:
-          requires: [build-lint-code, docker-container]
-          filters:
-            branches:
-              only: [main]
-      - create-eks-cluster: 
-          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
-          filters:
-            branches:
-              only: [main]
-      - deploy-to-eks:
-          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
-          filters:
-            branches:
-              only: [main]
-      - smoke-test:
-          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster, deploy-to-eks]
-          filters:
-            branches:
-              only: [main]
+#      - deploy-network-infrastructure:
+#          requires: [build-lint-code, docker-container]
+#          filters:
+#            branches:
+#              only: [main]
+#      - create-eks-cluster: 
+#          requires: [build-lint-code, docker-container, deploy-network-infrastructure]
+#          filters:
+#            branches:
+#              only: [main]
+#      - deploy-to-eks:
+#          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster]
+#          filters:
+#            branches:
+#              only: [main]
+#      - smoke-test:
+#          requires: [build-lint-code, docker-container, deploy-network-infrastructure, create-eks-cluster, deploy-to-eks]
+#          filters:
+#            branches:
+#              only: [main]
