@@ -72,9 +72,14 @@ jobs:
             apk --no-cache add curl
             apk add --upgrade net-tools-doc
             apk add --no-cache py-pip=9.0.0-r1
-            
-            wget https://github.com/aquasecurity/trivy/releases/download/v0.32.1/trivy_0.32.1_Linux-64bit.deb --no-check-certificate
-            sudo dpkg -i trivy_0.32.1_Linux-64bit.deb
+      - run:
+          name: install trivy
+          command: |
+            sudo apt-get install wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install trivy
       - run:
           name: Build docker image and add a descriptive tag
           command: |
