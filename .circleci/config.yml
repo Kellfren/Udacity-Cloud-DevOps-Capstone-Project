@@ -11,8 +11,8 @@ orbs:
 
 parameters:
   cluster-name:
-    type: string
-    default: "udacity-capstone-cluster"
+      type: string
+      default: "udacity-capstone-cluster"
 
 commands:
   eks-cluster-destroy:
@@ -312,22 +312,22 @@ workflows:
  capstone:
     jobs:
       - parameters-test
-      - build-lint-code:
-          filters:
-            branches:
-              only: [main]
-      - docker-container:
-          requires: [build-lint-code]
-          filters:
-            branches:
-              only: [main]
-      - anchore/image_scan:
-          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-          timeout: '300'
-          requires: [build-lint-code]
-          filters:
-            branches:
-              only: [main]        
+#      - build-lint-code:
+#          filters:
+#            branches:
+#              only: [main]
+#      - docker-container:
+#          requires: [build-lint-code]
+#          filters:
+#            branches:
+#              only: [main]
+#      - anchore/image_scan:
+#          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+#          timeout: '300'
+#          requires: [build-lint-code]
+#          filters:
+#            branches:
+#              only: [main]        
 #      - deploy-network-infrastructure:
 #          requires: [docker-container]
 #          filters:
