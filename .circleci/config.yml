@@ -114,7 +114,7 @@ jobs:
           name: install dependencies
           command: |
             curl https://pyenv.run | bash 
-            pt-get install \
+            apt-get install \
             ca-certificates \
             curl \
             gnupg \
