@@ -34,6 +34,20 @@ jobs:
     steps:
       - checkout
       - run: echo << pipeline.parameters.cluster-name >>
+      - run:
+          name: check if cluster exist 
+          command: | 
+            aws eks list-clusters --region us-east-1 --output text > cluster.txt
+            cat cluster.txt
+            if grep -q << pipeline.parameters.cluster-name >> cluster.txt
+            then
+              echo "the cluster already exist"
+              circleci-agent step halt
+              exit 0
+            else
+              echo "the cluster doesn't exits"
+            fi
+      
   
   #Build and lint code
   build-lint-code:
