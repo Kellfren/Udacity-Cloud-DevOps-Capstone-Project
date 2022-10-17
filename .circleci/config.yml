@@ -33,7 +33,7 @@ jobs:
       - image: python:3.9-buster
     steps:
       - checkout
-      - run: echo << parameters.pipeline.cluster-name >>
+      - run: echo << pipeline.parameters.cluster-name >>
   
   #Build and lint code
   build-lint-code:
