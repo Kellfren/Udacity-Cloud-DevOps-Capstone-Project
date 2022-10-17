@@ -325,15 +325,15 @@ jobs:
 workflows:
  capstone:
     jobs:
-      - build-lint-code:
-          filters:
-            branches:
-              only: [main]
-      - docker-container:
-          requires: [build-lint-code]
-          filters:
-            branches:
-              only: [main]   
+#      - build-lint-code:
+#          filters:
+#            branches:
+#              only: [main]
+#      - docker-container:
+#          requires: [build-lint-code]
+#          filters:
+#            branches:
+#              only: [main]   
       - local_image_scan: 
           requires: [build-lint-code, docker-container]
           filters:
