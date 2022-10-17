@@ -115,8 +115,8 @@ jobs:
           name: Load Docker image layer cache
           command: |
             docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
-      - anchore/analyze_local_image:
-          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+#      - anchore/analyze_local_image:
+#          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
       
   deploy-network-infrastructure:
     docker:
