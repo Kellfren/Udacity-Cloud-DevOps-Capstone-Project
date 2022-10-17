@@ -60,7 +60,6 @@ jobs:
   docker-container:
     docker:
       - image: docker:17.05.0-ce-git
-    executor: anchore/anchore_engine  
     working_directory: ~/app
     steps:
       - checkout
@@ -115,8 +114,8 @@ jobs:
           name: Load Docker image layer cache
           command: |
             docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
-#      - anchore/analyze_local_image:
-#          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+      - anchore/analyze_local_image:
+          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
       
   deploy-network-infrastructure:
     docker:
