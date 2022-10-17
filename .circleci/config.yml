@@ -95,6 +95,10 @@ jobs:
 #      - anchore/image_scan:
 #          image_name: frenkell/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
 #          timeout: '300'
+      - anchore/analyze_local_image:
+          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+          timeout: '500'
+          analysis_fail: True   
 
   deploy-network-infrastructure:
     docker:
