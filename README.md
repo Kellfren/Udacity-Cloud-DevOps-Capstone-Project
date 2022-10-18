@@ -33,25 +33,27 @@ Use Makefile, Dockerfile, run_docker.sh, run_kubernetes.sh, upload_docker.sh and
 
 ## Setup CircleCi CICD Pipeline
 Configure CircleCi environment variables:
-AWS_ACCESS_KEY_ID		
-AWS_DEFAULT_REGION		
-AWS_SECRET_ACCESS_KEY		
-DOCKERHUB_PASSWORD		
-DOCKERHUB_USERNAME
+- AWS_ACCESS_KEY_ID		
+- AWS_DEFAULT_REGION		
+- AWS_SECRET_ACCESS_KEY		
+- DOCKERHUB_PASSWORD		
+- DOCKERHUB_USERNAME
 
 ## Check Deployment
 Update kubeconfig file and check cluster, pod, services, deployments:
 
 ```sh
-aws eks update-kubeconfig --region us-west-2 --name gpt-app
+aws eks update-kubeconfig --region us-east-1 --name udacity-capstone-cluster
 ```
 ```sh
 kubectl get all
 ```
-### Image repository
+## Image repository
 
-### Test Web App
+https://hub.docker.com/repository/docker/frenkell/udacity-capstone
+
+## Test Web App
 
 Web app eks endopoint: http://a136381c49354405091ad26d0ffb8d5f-2131007930.us-east-1.elb.amazonaws.com:5000/
 
-![web-app.PNG](screenshots/web-app.PNG "web-app.PNG")
+![web-app.PNG](./screenshots/web-app.PNG "web-app.PNG")
