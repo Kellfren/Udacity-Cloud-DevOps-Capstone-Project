@@ -105,7 +105,7 @@ jobs:
   #RIPROVARE AD INSTALLARE TRIVY
   local_image_scan:
     docker:
-      - image: cimg/python:3.9 #circleci/python:3.9-buster
+      - image: cimg/base:2021.04
     steps:
       - checkout
       - setup_remote_docker
