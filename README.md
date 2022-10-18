@@ -56,6 +56,4 @@ https://hub.docker.com/repository/docker/frenkell/udacity-capstone
 
 ## Test Web App
 
-Web app eks endopoint: http://a136381c49354405091ad26d0ffb8d5f-2131007930.us-east-1.elb.amazonaws.com:5000/
-
 ![alt text](https://github.com/Kellfren/Udacity-Cloud-DevOps-Capstone-Project/blob/main/screenshots/web-app.png?raw=true)
