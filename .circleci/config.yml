@@ -114,7 +114,7 @@ jobs:
       - run:
           name: install dependecies
           command: |
-           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.32.1
+           sudo curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.32.1
 
       - run:
           name: Build docker image and add a descriptive tag
