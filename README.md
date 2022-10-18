@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kellfren/Udacity-Cloud-DevOps-Capstone-Project/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kellfren/Udacity-Cloud-DevOps-Capstone-Project/tree/main)
+
 # Udacity-Cloud-DevOps-Capstone-Project
  In this project I applied the skills and knowledge developed throughout the Udacity Cloud DevOps Nanodegree program. These include:
 
