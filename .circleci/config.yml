@@ -162,7 +162,7 @@ jobs:
       - checkout
       - aws-cli/install
       - run:
-          name: check if cluster exist 
+          name: check if cluster exist
           command: | 
             aws eks list-clusters --region us-east-1 --output text > cluster.txt
             cat cluster.txt
