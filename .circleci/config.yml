@@ -91,49 +91,47 @@ jobs:
             docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
             docker image tag udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} $dockerpath
             docker push $dockerpath
-#      - run:
-#          name: Save Docker image
-#          command: |
-#            rm -rf /home/circleci/workspace/docker/
-#            mkdir /home/circleci/workspace/docker/ -p
-#            docker save -o /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-#      - persist_to_workspace:
-#          root: /home/circleci/workspace/
-#          paths:
-#            - docker/*
+      - run:
+          name: Save Docker image
+          command: |
+            rm -rf /home/circleci/workspace/docker/
+            mkdir /home/circleci/workspace/docker/ -p
+            docker save -o /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
+      - persist_to_workspace:
+          root: /home/circleci/workspace/
+          paths:
+            - docker/*
 
+  #RIPROVARE AD INSTALLARE TRIVY
   local_image_scan:
     docker:
-      - image: circleci/python:3.9-buster
+      - image: circleci/python:3.9-buster #cimg/python:3.9-buster?
     steps:
       - checkout
       - setup_remote_docker
-#      - attach_workspace:
-#          at: /home/circleci/workspace/
-#      - run:
-#          name: install dependencies
-#          command: |
-#            curl https://pyenv.run | bash 
-#      - run:
-#          name: Load Docker image layer cache
-#          command: |
-#            docker load -i /home/circleci/workspace/docker/udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}.tar
+      - attach_workspace:
+          at: /home/circleci/workspace/
       - run:
-          name: build container
+          name: install dependecies
+          command: |
+            sudo apt-get install wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install trivy
+      - run:
+          name: Build docker image and add a descriptive tag
           command: |
             docker build --build-arg build_number="${CIRCLE_BUILD_NUM}" -t udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5} .
-      - anchore/analyze_local_image:
-          dockerfile_path: ./Dockerfile
-          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-          policy_bundle_file_path: .circleci/.anchore/policy_bundle.json
-          policy_failure: false
-          timeout: '500'
-      - anchore/parse_reports
-      - store_artifacts:
-          path: anchore-reports
-#      - anchore/analyze_local_image:
-#          image_name: udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}
-      
+      - run:
+          name: List docker images
+          command: |
+            docker image ls       
+      - run:
+          name: scan docker vulnerabilities and exposures
+          command: |
+            trivy --severity HIGH udacity-capstone:ver-${CIRCLE_WORKFLOW_ID:0:5}      
+
   deploy-network-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -338,20 +336,20 @@ jobs:
 workflows:
  capstone:
     jobs:
-      - build-lint-code:
-          filters:
-            branches:
-              only: [main]
-      - docker-container:
-          requires: [build-lint-code]
-          filters:
-            branches:
-              only: [main]   
-      - local_image_scan:
-          requires: [build-lint-code, docker-container]
-          filters:
-            branches:
-              only: [main]         
+#      - build-lint-code:
+#          filters:
+#            branches:
+#              only: [main]
+#      - docker-container:
+#          requires: [build-lint-code]
+#          filters:
+#            branches:
+#              only: [main]   
+      - local_image_scan
+#          requires: [build-lint-code, docker-container]
+#          filters:
+#            branches:
+#              only: [main]         
 #      - deploy-network-infrastructure:
 #          requires: [build-lint-code, docker-container]
 #          filters:
